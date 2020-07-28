@@ -1,9 +1,9 @@
-(ns firemore-start-template.views.root
+(ns karatsuba.views.root
   (:require
    [re-frame.core :as re-frame]
-   [firemore-start-template.mui :as mui]
-   [firemore-start-template.views.util :as views.util]
-   [firemore-start-template.util :as util]))
+   [karatsuba.mui :as mui]
+   [karatsuba.views.util :as views.util]
+   [karatsuba.util :as util]))
 
 (defn title []
   (let [greeting @(re-frame/subscribe [:greeting])]

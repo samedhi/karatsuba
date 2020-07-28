@@ -1,8 +1,8 @@
-(ns firemore-start-template.breakpoints
+(ns karatsuba.breakpoints
   (:require
    [breaking-point.core :as bp]
    [re-frame.core :as re-frame]
-   [firemore-start-template.config :as config]))
+   [karatsuba.config :as config]))
 
 (def previous-breakpoints (atom nil))
 
