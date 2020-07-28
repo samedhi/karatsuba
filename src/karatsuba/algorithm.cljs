@@ -61,6 +61,14 @@
 #_(= (add "12312412" "198797234")
      (str (+ 12312412 198797234)))
 
+(defn shift-left
+  "Shift string s to the left (fill with `n` '0')"
+  [s n]
+  (string/join (cons s (repeat n "0"))))
+
+#_(shift-left "123" 0)
+#_(shift-left "123" 3)
+
 (defn karatsuba
   "Take 2 base 10 integers (as strings) and returns their multiplication (as an integer)"
   [s1 s2]
