@@ -1,7 +1,6 @@
 (ns karatsuba.algorithm
   (:require
-   [clojure.string :as string]
-   [clojure.test :as test]))
+   [clojure.string :as string]))
 
 ;;procedure karatsuba(num1, num2)
 ;; if (num1 < 10) or (num2 < 10)
@@ -39,6 +38,28 @@
   (js/Math.pow n m))
 
 #_(pow 7 3)
+
+(defn add
+  "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
+  [s1 s2]
+  (loop [[s1-digit & s1-rest] (reverse s1)
+         [s2-digit & s2-rest] (reverse s2)
+         carry 0
+         acc []]
+    (if (and (zero? carry) (nil? s1-digit) (nil? s2-digit))
+      (string/join (reverse acc))
+      (let [v (+ (int (or s1-digit 0)) (int (or s2-digit 0)) carry)]
+        (recur
+         s1-rest
+         s2-rest
+         (quot v 10)
+         (conj acc (mod v 10)))))))
+
+#_(add "7" "1")
+#_(add "9" "1")
+#_(add "9" "7")
+#_(= (add "12312412" "198797234")
+     (str (+ 12312412 198797234)))
 
 (defn karatsuba
   "Take 2 base 10 integers (as strings) and returns their multiplication (as an integer)"
