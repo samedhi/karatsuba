@@ -4,6 +4,7 @@
    [goog.dom :as goog.dom]
    [reagent.dom :as reagent.dom]
    [re-frame.core :as re-frame]
+   [karatsuba.algorithm :as algorithm]
    [karatsuba.breakpoints :as breakpoints]
    [karatsuba.events :as events]
    [karatsuba.subs :as subs]
