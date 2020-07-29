@@ -82,14 +82,38 @@
 #_(shift-left "123" 0)
 #_(shift-left "123" 3)
 
-(defn zero-padd
+(defn padd-zero
   "Add zero or more '0' to the left of 's so that 's is of length 'l"
   [s l]
   (let [c (count s)
         delta (- l c)]
     (str (string/join (repeat delta "0")) s)))
 
-#_(zero-padd "123" 5)
+#_(padd-zero "123" 5)
+
+(defn nines-complement-lookup [digit]
+  (case digit
+    "0" "9"
+    "1" "8"
+    "2" "7"
+    "3" "6"
+    "4" "5"
+    "5" "4"
+    "6" "3"
+    "7" "2"
+    "8" "1"
+    "9" "0"))
+
+#_(nines-complement-lookup "5")
+
+(defn nines-complement [s]
+  (->> s
+       string/reverse
+       (map nines-complement-lookup)
+       reverse
+       string/join))
+
+#_(nines-complement "873")
 
 (defn karatsuba
   "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
