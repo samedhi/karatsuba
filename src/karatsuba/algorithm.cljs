@@ -130,7 +130,7 @@
   "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
   [s1 s2]
   (if (and (-> s1 count (= 1)) (-> s2 count (= 1)))
-    (* (int s1) (int s2))
+    (str (* (int s1) (int s2)))
     (let [m (js/Math.ceil
              (/ (min (count s1)
                      (count s2))
