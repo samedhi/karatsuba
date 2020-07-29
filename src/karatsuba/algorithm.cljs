@@ -1,5 +1,8 @@
 (ns karatsuba.algorithm
   (:require
+   [clojure.spec.alpha :as spec]
+   ;; [clojure.spec.gen.alpha :as gen]
+   [clojure.test.check.generators :as gen]
    [clojure.string :as string]))
 
 ;;procedure karatsuba(num1, num2)
@@ -154,6 +157,31 @@
       (add (shift-left z2 (* 2 m))
            (shift-left z1 (* 1 m))
            (shift-left z0 (* 0 m))))))
+
+(def digit-string-generator
+  (gen/fmap
+   str
+   (gen/such-that #(<= 0 %)
+                  (spec/gen int?))))
+
+#_(gen/sample digit-string-generator)
+
+(def digit-string-validator
+  (spec/and string?
+            #(re-matches #"\d+" %)))
+
+#_(spec/valid? digit-string-validator "123f")
+
+(spec/def ::string-digit
+  (spec/with-gen
+    digit-string-validator
+    (fn [] digit-string-generator)))
+
+#_(gen/sample (spec/gen ::string-digit))
+
+(spec/fdef karatsuba
+  :args (spec/cat :s1 ::string-digit :s2 ::string-digit)
+  :ret ::string-digit)
 
 #_(karatsuba "1" "")
 
