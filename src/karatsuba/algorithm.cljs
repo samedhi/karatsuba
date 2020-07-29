@@ -1,9 +1,14 @@
 (ns karatsuba.algorithm
   (:require
+   [cljs.pprint :as pprint]
    [clojure.spec.alpha :as spec]
    ;; [clojure.spec.gen.alpha :as gen]
+   [clojure.test.check]
+   [clojure.test.check.properties]
    [clojure.test.check.generators :as gen]
-   [clojure.string :as string]))
+   [clojure.string :as string]
+   [clojure.spec.test.alpha :as stest]
+   ))
 
 ;;procedure karatsuba(num1, num2)
 ;; if (num1 < 10) or (num2 < 10)
@@ -158,17 +163,30 @@
            (shift-left z1 (* 1 m))
            (shift-left z0 (* 0 m))))))
 
+#_(karatsuba "0" "100")
+
+#_(karatsuba "16" "13")
+
+#_(karatsuba "1000" "130")
+
+#_(= (karatsuba "12345" "6789")
+     (str (* 12345 6789)))
+
+#_(= (karatsuba "1234523423432324" "67899092324")
+     (* 1234523423432324 67899092324))
+
+(def biggest-tested-int (pow 2 25))
+
 (def digit-string-generator
   (gen/fmap
-   str
-   (gen/such-that #(<= 0 %)
-                  (spec/gen int?))))
+   #(str (mod % biggest-tested-int))
+   (spec/gen int?)))
 
 #_(gen/sample digit-string-generator)
 
 (def digit-string-validator
   (spec/and string?
-            #(re-matches #"\d+" %)))
+            #(re-matches #"\d*" %)))
 
 #_(spec/valid? digit-string-validator "123f")
 
@@ -183,14 +201,5 @@
   :args (spec/cat :s1 ::string-digit :s2 ::string-digit)
   :ret ::string-digit)
 
-#_(karatsuba "1" "")
-
-#_(karatsuba "16" "13")
-
-#_(karatsuba "1000" "130")
-
-#_(= (karatsuba "12345" "6789")
-     (str (* 12345 6789)))
-
-#_(= (karatsuba "1234523423432324" "67899092324")
-     (* 1234523423432324 67899092324))
+#_(stest/instrument `karatsuba)
+#_(pprint/pprint (stest/check `karatsuba))
