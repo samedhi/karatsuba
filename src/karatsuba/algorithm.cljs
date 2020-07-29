@@ -44,7 +44,7 @@
 ;; -BIG +SMALL => -
 ;; -BIG -SMALL => -
 
-(defn add
+(defn binary-add
   "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
   [s1 s2]
   (loop [[s1-digit & s1-rest] (reverse s1)
@@ -60,14 +60,19 @@
          (quot v 10)
          (conj acc (mod v 10)))))))
 
+(defn add
+  ([] "0")
+  ([x] x)
+  ([x y] (binary-add x y))
+  ([x y z] (reduce binary-add x [y z])))
+
+#_(add)
+#_(add "123")
 #_(add "7" "1")
-#_(add "9" "1")
+#_(add "9" "1" "14")
 #_(add "9" "7")
 #_(= (add "12312412" "198797234")
      (str (+ 12312412 198797234)))
-
-(defn variadic-add [& xs]
-  (reduce add xs))
 
 (defn shift-left
   "Shift string s to the left (fill with `n` '0')"
@@ -102,9 +107,9 @@
           z1 (- (karatsuba (add l1 h1) (add l2 h2))
                 z0
                 z2)]
-      (variadic-add (shift-left z2 (* 2 m))
-                    (shift-left z1 (* 1 m))
-                    (shift-left z0 (* 0 m))))))
+      (add (shift-left z2 (* 2 m))
+           (shift-left z1 (* 1 m))
+           (shift-left z0 (* 0 m))))))
 
 #_(karatsuba "16" "13")
 
