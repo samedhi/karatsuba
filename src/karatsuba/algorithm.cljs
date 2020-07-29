@@ -44,7 +44,7 @@
 ;; -BIG +SMALL => -
 ;; -BIG -SMALL => -
 
-(defn binary-add
+(defn add-arity-2
   "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
   [s1 s2]
   (loop [[s1-digit & s1-rest] (reverse s1)
@@ -62,9 +62,7 @@
 
 (defn add
   ([] "0")
-  ([x] x)
-  ([x y] (binary-add x y))
-  ([x y z] (reduce binary-add x [y z])))
+  ([& args] (reduce add-arity-2 args)))
 
 #_(add)
 #_(add "123")
@@ -115,6 +113,19 @@
 
 #_(nines-complement "873")
 
+(defn subtract-arity-2
+  "subtract base 10 string 's2 from base 10 string 's1"
+  [s1 s2]
+  (nines-complement
+   (add (nines-complement s1)
+        s2)))
+
+(defn subtract
+  ([] "0")
+  ([& args] (reduce subtract-arity-2 args)))
+
+#_(subtract "873" "218" "10")
+
 (defn karatsuba
   "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
   [s1 s2]
@@ -128,9 +139,9 @@
           [h2 l2] (split-lower-n-digits s2 m)
           z0 (karatsuba l1 l2)
           z2 (karatsuba h1 h2)
-          z1 (- (karatsuba (add l1 h1) (add l2 h2))
-                z0
-                z2)]
+          z1 (subtract (karatsuba (add l1 h1) (add l2 h2))
+                       z0
+                       z2)]
       (add (shift-left z2 (* 2 m))
            (shift-left z1 (* 1 m))
            (shift-left z0 (* 0 m))))))
