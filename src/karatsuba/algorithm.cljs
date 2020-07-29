@@ -120,17 +120,26 @@
    (add (nines-complement s1)
         s2)))
 
+(defn trim
+  "trim leading zeros off of base 10 string"
+  [s]
+  (string/replace s #"^0*" ""))
+
+#_(trim "000345")
+
 (defn subtract
   ([] "0")
-  ([& args] (reduce subtract-arity-2 args)))
+  ([& args] (trim (reduce subtract-arity-2 args))))
 
 #_(subtract "873" "218" "10")
+#_(subtract "100" "10")
+#_(subtract "48032" "391")
 
 (defn karatsuba
   "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
   [s1 s2]
-  (if (and (-> s1 count (= 1)) (-> s2 count (= 1)))
-    (str (* (int s1) (int s2)))
+  (if (and (-> s1 count (<= 1)) (-> s2 count (<= 1)))
+    (-> (* (int s1) (int s2)) str trim)
     (let [m (js/Math.ceil
              (/ (min (count s1)
                      (count s2))
@@ -145,6 +154,8 @@
       (add (shift-left z2 (* 2 m))
            (shift-left z1 (* 1 m))
            (shift-left z0 (* 0 m))))))
+
+#_(karatsuba "1" "")
 
 #_(karatsuba "16" "13")
 
