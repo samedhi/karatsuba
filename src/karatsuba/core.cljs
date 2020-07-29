@@ -10,6 +10,8 @@
    [karatsuba.subs :as subs]
    [karatsuba.views.root :as root]))
 
+(enable-console-print!)
+
 (defn mount-root []
   (when-let [el (goog.dom/getElement "app")]
     (reagent.dom/render root/component el)))
