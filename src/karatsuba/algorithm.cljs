@@ -39,6 +39,11 @@
 
 #_(pow 7 3)
 
+;; +BIG +SMALL => +
+;; +BIG -SMALL => +
+;; -BIG +SMALL => -
+;; -BIG -SMALL => -
+
 (defn add
   "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
   [s1 s2]
@@ -61,6 +66,9 @@
 #_(= (add "12312412" "198797234")
      (str (+ 12312412 198797234)))
 
+(defn variadic-add [& xs]
+  (reduce add xs))
+
 (defn shift-left
   "Shift string s to the left (fill with `n` '0')"
   [s n]
@@ -69,8 +77,17 @@
 #_(shift-left "123" 0)
 #_(shift-left "123" 3)
 
+(defn zero-padd
+  "Add zero or more '0' to the left of 's so that 's is of length 'l"
+  [s l]
+  (let [c (count s)
+        delta (- l c)]
+    (str (string/join (repeat delta "0")) s)))
+
+#_(zero-padd "123" 5)
+
 (defn karatsuba
-  "Take 2 base 10 integers (as strings) and returns their multiplication (as an integer)"
+  "Take 2 base 10 integers (as strings) and returns their multiplication (as a string)"
   [s1 s2]
   (if (or (-> s1 count (= 1)) (-> s2 count (= 1)))
     (* (int s1) (int s2))
@@ -82,20 +99,19 @@
           [h2 l2] (split-lower-n-digits s2 m)
           z0 (karatsuba l1 l2)
           z2 (karatsuba h1 h2)
-          z1 (- (karatsuba (str (+ (int l1) (int h1)))
-                           (str (+ (int l2) (int h2))))
+          z1 (- (karatsuba (add l1 h1) (add l2 h2))
                 z0
                 z2)]
-      (+ (* z2 (pow 10 (* 2 m)))
-         (* z1 (pow 10 (* 1 m)))
-         (* z0 (pow 10 (* 0 m)))))))
+      (variadic-add (shift-left z2 (* 2 m))
+                    (shift-left z1 (* 1 m))
+                    (shift-left z0 (* 0 m))))))
 
-#_(karatsuba "16" "13" 0)
+#_(karatsuba "16" "13")
 
-#_(karatsuba "1000" "130" 0)
+#_(karatsuba "1000" "130")
 
 #_(= (karatsuba "12345" "6789")
-     (* 12345 6789))
+     (str (* 12345 6789)))
 
 #_(= (karatsuba "1234523423432324" "67899092324")
      (* 1234523423432324 67899092324))
